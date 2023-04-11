@@ -1,0 +1,9 @@
+[all:vars]
+sshd_allow_users="etl etl_user quyetmn"
+env="production"
+team="data"
+
+[airflow_worker]
+10.10.10.10
+10.10.10.11
+

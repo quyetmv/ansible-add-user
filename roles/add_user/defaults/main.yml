@@ -1,0 +1,22 @@
+users_create_homedirs: yes
+users_default_shell: /bin/bash
+viewser_alias: "Cmnd_Alias VIEWER = /usr/bin/docker ps, /usr/bin/docker inspect, /bin/journalctl, /usr/bin/tail *, /bin/more * /var/log/*, /bin/cat /var/log/*, /bin/grep * /var/log/*"
+
+viewer_user: true
+
+users_deleted: 
+  # - etl_user
+
+users:
+  - tidb
+  - etl
+
+
+users_info:
+  - user: etl
+    fullname: "Extract - Transform - Load"
+    authorized_keys: 
+
+  - user: tidb
+    fullname: tidb
+    authorized_keys: s

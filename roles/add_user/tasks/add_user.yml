@@ -1,0 +1,45 @@
+---
+- name: Create admin users
+  user:
+    name: "{{item[1].user}}"
+    comment: "{{item[1].fullname}}"
+    shell: "{{ users_default_shell }}"
+    createhome: "{{ users_create_homedirs }}"
+    state: present
+  with_nested:
+    - "{{ users }}"
+    - "{{ users_info }}"
+  when: item[0] == item[1].user
+
+- name: SSH keys
+  authorized_key: user="{{ item[0] }}" key="{{item[1].authorized_keys}}"
+  with_nested:
+    - "{{ users }}"
+    - "{{ users_info }}"
+  when: item[0] == item[1].user
+
+- include: admin_user.yml
+  # when: viewer_user is not defined
+
+# - include: viewer_user.yml
+#   when: viewer_user is defined
+
+- name: Allow users SSH access Ubuntu
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: '^{{item.name}}'
+    line: '{{item.name}} {{item.value}}'
+  with_items:
+    - { name: 'AllowUsers' , value: '{{ sshd_allow_users }}' }
+  when: ansible_distribution == 'Ubuntu'
+  notify: restart ssh
+
+- name: Allow users SSH access CentOS
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: '^{{item.name}}'
+    line: '{{item.name}} {{item.value}}'
+  with_items:
+    - { name: 'AllowUsers' , value: '{{ sshd_allow_users }}' }
+  when: ansible_distribution == 'CentOS'
+  notify: restart sshd

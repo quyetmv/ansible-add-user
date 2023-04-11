@@ -1,0 +1,17 @@
+---
+
+- debug: msg=" Create User {{ users }}"
+- debug: msg=" Remove User {{ users_deleted }}"
+
+- name: Deleted user removal
+  user: 
+    name: "{{ item }}" 
+    state: absent
+  with_items: "{{users_deleted}}"
+
+- name: Removing from /etc/sudoers.d if existing
+  file:
+    path: /etc/sudoers.d/{{ item }}
+    state: absent
+  with_items: "{{users_deleted}}"
+

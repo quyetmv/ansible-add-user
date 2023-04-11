@@ -1,0 +1,16 @@
+---
+- name: Create user's sudoers file
+  lineinfile:
+    dest: /etc/sudoers.d/{{item[1].user}}
+    regexp: '^{{item[1].user}}'
+    line: '{{item[1].user}} ALL=(ALL) NOPASSWD:ALL'
+    state: present
+    create: yes
+    owner: root
+    group: root
+    mode: 0440
+    validate: 'visudo -cf %s'
+  with_nested:
+    - "{{ users }}"
+    - "{{ users_info }}"
+  when: item[0] == item[1].user

@@ -1,0 +1,14 @@
+---
+- name: Create user's sudoers file
+  lineinfile:
+    dest: /etc/sudoers.d/viewer
+    line: '{{item[1].user}} ALL = NOPASSWD: VIEWER_ROLE'
+    state: present
+    owner: root
+    group: root
+    mode: 0440
+    validate: 'visudo -cf %s'
+  with_nested:
+    - "{{ users }}"
+    - "{{ users_info }}"
+  when: item[0] == item[1].user

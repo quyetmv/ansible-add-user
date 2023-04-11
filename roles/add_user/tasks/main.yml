@@ -1,0 +1,6 @@
+---
+- include: add_user.yml
+  tags: add_user
+
+- include: del_user.yml
+  tags: del_user
